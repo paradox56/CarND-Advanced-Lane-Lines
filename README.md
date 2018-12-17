@@ -14,7 +14,7 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-##System and Software Requirements <br>
+## System and Software Requirements <br>
 * Ubuntu 18.04/ Mac OS Mojave
 * Python 3.6.6
 * Numpy 1.15.4
