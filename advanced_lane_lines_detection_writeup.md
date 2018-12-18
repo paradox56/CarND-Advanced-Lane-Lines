@@ -99,7 +99,7 @@ np.savetxt("camera_calibration_matrix.csv",mtx, delimiter=",")
 np.savetxt("camera_distortion_coefficients.csv",dist, delimiter=",")
 ```
 
-<script src="https://gist.github.com/paradox56/e7c2583029f0664cae66df6eb120a3ed.js"></script>
+
 
 Through this process, we can also obtain both camera calibration matrix $mtx$ and distortion coefficient $dist$, which will be used later.
 
@@ -183,7 +183,7 @@ def dir_threshold(image, sobel_kernel=-1, thresh=(0.5, np.pi/2)):
     dir_binary[(gradientDirectionImg >= thresh_min) & (gradientDirectionImg <= thresh_max)] = 1
 return dir_binary
 ```
-<script src="https://gist.github.com/paradox56/ce1292714bbd334349c1c907b0b95af3.js"></script>
+
 
 Here is a comparison of original image and the image after applying Sobel thresholding:
 
@@ -205,7 +205,7 @@ def color_threshold(imgage, S_thresh=(0, 255),H_thresh=(0, 255)):
     binary_output[(S > S_thresh[0]) & (S <= S_thresh[1])& (H > H_thresh[0])& (H <= H_thresh[1])] = 1
 return binary_output
 ```
-<script src="https://gist.github.com/paradox56/3c28869d98882873fdeef6b3c2bf5f93.js"></script>
+
 
 Here is an example of applying color thresholding:
 
@@ -234,7 +234,6 @@ def threshold(image,ksize, abs_sobel_thresh_param_x, abs_sobel_thresh_param_y ,m
     image_after_threshold_binary[(combined_gradient_binary == 1)|(color_binary == 1)]=1
 return image_after_threshold_binary
 ```
-<script src="https://gist.github.com/paradox56/43f97bee60f5aa0527b6a919b44a567c.js"></script>
 
 To further improve the result, I performed a masking on thresholded image by using the following code:
 ```python
@@ -251,7 +250,7 @@ def mask_image(img, vertices):
     masked_image = cv2.bitwise_and(img, mask)
 return masked_image
 ```
-<script src="https://gist.github.com/paradox56/45e1afe9707155923da32fbe4ca4878e.js"></script>
+
 
 
 Here is a example of processed image using combined thresholding technique and image masking:
@@ -280,7 +279,7 @@ def perspective_transform(image):
     top_down_image = cv2.warpPerspective(image, transform_matrix, (width,height), flags = cv2.INTER_LINEAR)
 return top_down_image, transform_matrix
 ```
-<script src="https://gist.github.com/paradox56/0b91bb59f730a091a1bc001d45e8e3c0.js"></script>
+
 To make the code more general to cameras with different resolution, here is the source and destination chart with respect to image size (In this project, width = 1280, height = 720):
 
 | Source        | Destination   |
@@ -416,7 +415,7 @@ def fit_polynomial(binary_warped):
     out_img[righty, rightx] = [0, 0, 255]
     return left_fit, right_fit, ploty, leftx, lefty, rightx, righty, left_fitx, right_fitx
 ```
-<script src="https://gist.github.com/paradox56/2daacb8bf8ffce0e874f60270cf072cb.js"></script>
+
 
 Here is the final result:
 <img src="https://raw.githubusercontent.com/paradox56/CarND-Advanced-Lane-Lines/master/src/fitted_warped_image_test_3.png"/>
@@ -454,7 +453,7 @@ def fitpolynomial_with_previous_fitting_value(binary_warped, left_fit_before, ri
 
 return left_fit_current, right_fit_current, ploty, leftx, lefty, rightx, righty, left_fitx_current, right_fitx_current
 ```
-<script src="https://gist.github.com/paradox56/5c7b7a759b9651072b4f753c1a72a604.js"></script>
+
 
 
 ### Lane Lines Curvature and Car Position Estimation
@@ -501,7 +500,6 @@ def measured_curvature_meters(left_fit, right_fit, ploty, leftx, lefty, rightx, 
 
 return left_curverad, right_curverad,center_offset_meter
 ```
-<script src="https://gist.github.com/paradox56/0cdb38802b4d77797194e6d48d164686.js"></script>
 
 ### Final Result
 After finish writing all the codes, here is the final result I have for a test image:
@@ -517,4 +515,4 @@ Here's the [Advanced Lane Lines Detection Video](https://vimeo.com/306897269)
 ---
 
 ### Discussion
-My approach to this project yields a really nice result for the project video.
+My approach to this project yields a really nice result for the project video. However, it fails to detect lane lines correctly in the challenged videos, where roads are curved greatly. I believe the reason for my algorithm to fail in those situation is because of the fixed masking vertices, i.e., I do not change the region of interest as the road situation changes. For future improvements, I think the mask vertices should change based on the calculated lane line curvature. In addition, having a second camera could also help since we could do feature matching in that case to detect lane lines more accurately.
